@@ -6,22 +6,36 @@ import com.fincity.cardetailapp.utility.CarDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Service
 public class CarRepositoryImpl implements CarRepository{
 
+    private static final String INSERT_QUERY = "INSERT INTO car_detail(name,manufacture_name,model,manufacture_year,color) VALUES(?,?,?,?,?)";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public int insert(CarEntity car) {
-        return jdbcTemplate.update("INSERT INTO car_detail(name,manufacture_name,model,manufacture_year,color) VALUES(?,?,?,?,?)",
-                new Object[] {
-                        car.getName(), car.getManufactureName(),car.getModel(),car.getManufactureYear(),car.getColor()
-                });
+    public long insert(CarEntity car) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection
+                    .prepareStatement(INSERT_QUERY);
+            ps.setString(1, car.getName());
+            ps.setString(2, car.getManufactureName());
+            ps.setString(3, car.getModel());
+            ps.setInt(4, car.getManufactureYear());
+            ps.setString(5, car.getColor());
+            return ps;
+        }, keyHolder);
+
+        return (long) keyHolder.getKey();
     }
 
     @Override
@@ -64,15 +78,15 @@ public class CarRepositoryImpl implements CarRepository{
 
     private void buildQuery(StringBuilder query,CarSearchEnum carSearchEnum, Object value){
         if (CarSearchEnum.COLOR==carSearchEnum){
-            query.append("color like ").append("'%").append(carSearchEnum.getConvertType().apply(value)).append("%';");
+            query.append("color ilike ").append("'%").append(carSearchEnum.getConvertType().apply(value)).append("%';");
         }else if(CarSearchEnum.MANUFACTURE_YEAR==carSearchEnum){
             query.append("manufacture_year =").append(carSearchEnum.getConvertType().apply(value));
         }else if(CarSearchEnum.MANUFACTURE_NAME==carSearchEnum){
-            query.append("manufacture_name like ").append("'%").append(carSearchEnum.getConvertType().apply(value)).append("%';");
+            query.append("manufacture_name ilike ").append("'%").append(carSearchEnum.getConvertType().apply(value)).append("%';");
         }else if(CarSearchEnum.NAME==carSearchEnum){
-            query.append("name like").append("'%").append(carSearchEnum.getConvertType().apply(value)).append("%';");
+            query.append("name ilike").append("'%").append(carSearchEnum.getConvertType().apply(value)).append("%';");
         }else if(CarSearchEnum.MODEL==carSearchEnum){
-            query.append("model like").append("'%").append(carSearchEnum.getConvertType().apply(value)).append("%';");
+            query.append("model ilike").append("'%").append(carSearchEnum.getConvertType().apply(value)).append("%';");
         }
     }
 
