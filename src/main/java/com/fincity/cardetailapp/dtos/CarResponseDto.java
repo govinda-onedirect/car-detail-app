@@ -1,10 +1,8 @@
-package com.fincity.cardetailapp.enitities;
+package com.fincity.cardetailapp.dtos;
 
+import org.springframework.hateoas.RepresentationModel;
 
-
-
-
-public class CarEntity {
+public class CarResponseDto extends RepresentationModel<CarResponseDto> {
     private Long id;
     private String name;
     private String manufactureName;
@@ -58,5 +56,17 @@ public class CarEntity {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "CarResponseDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", manufactureName='" + manufactureName + '\'' +
+                ", model='" + model + '\'' +
+                ", manufactureYear=" + manufactureYear +
+                ", color='" + color + '\'' +
+                '}';
     }
 }

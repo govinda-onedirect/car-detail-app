@@ -17,7 +17,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser("user1@mailnator.com")
                 .password("user1")
-                .roles("USER")
+                .roles("USER1")
                 .and()
                 .withUser("admin@mailnator.com")
                 .password("admin")
@@ -31,10 +31,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().
-                antMatchers("/admin").hasAnyRole("ADMIN").
-                antMatchers("/user").hasAnyRole("USER").
-                antMatchers("/").permitAll().
+        http.csrf().disable().authorizeRequests().
+               antMatchers("/car/add","/h2-console","/car/delete").hasAnyRole("ADMIN").
+                antMatchers("/car").hasAnyRole("USER1").
+                antMatchers("*/*").permitAll().
                 and().formLogin();
     }
 }

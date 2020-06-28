@@ -1,23 +1,25 @@
-package com.fincity.cardetailapp.enitities;
+package com.fincity.cardetailapp.dtos;
 
 
+import java.io.Serializable;
 
-
-
-public class CarEntity {
-    private Long id;
+public class CarRequestDto implements Serializable {
+    private static final Long serialVersionUID=1L;
     private String name;
     private String manufactureName;
     private String model;
     private Integer manufactureYear;
     private String color;
 
-    public Long getId() {
-        return id;
+    public CarRequestDto() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public CarRequestDto(String name, String manufactureName, String model, Integer manufactureYear, String color) {
+        this.name = name;
+        this.manufactureName = manufactureName;
+        this.model = model;
+        this.manufactureYear = manufactureYear;
+        this.color = color;
     }
 
     public String getName() {
@@ -58,5 +60,16 @@ public class CarEntity {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "CarRequestDto{" +
+                "name='" + name + '\'' +
+                ", manufactureName='" + manufactureName + '\'' +
+                ", model='" + model + '\'' +
+                ", manufactureYear=" + manufactureYear +
+                ", color='" + color + '\'' +
+                '}';
     }
 }
