@@ -22,11 +22,13 @@ public class CarRepositoryImpl implements CarRepository{
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public long insert(CarEntity car) {
+    public Long insert(CarEntity car) {
+        String generatedColumns[] = { "id" };
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
-                    .prepareStatement(INSERT_QUERY);
+                    .prepareStatement(INSERT_QUERY,generatedColumns);
             ps.setString(1, car.getName());
             ps.setString(2, car.getManufactureName());
             ps.setString(3, car.getModel());
@@ -34,8 +36,13 @@ public class CarRepositoryImpl implements CarRepository{
             ps.setString(5, car.getColor());
             return ps;
         }, keyHolder);
+        //ResultSet rs = stmtInsert.getGeneratedKeys();
 
-        return (long) keyHolder.getKey();
+
+        if (keyHolder.getKey()!=null) {
+            return (Long) keyHolder.getKey();
+        }
+        return null;
     }
 
     @Override

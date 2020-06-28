@@ -30,7 +30,7 @@ public class CarServiceImpl implements CarService{
     public CarResponseDto addCar(CarRequestDto carRequestDto) {
         carValidatorService.validateRequest(carRequestDto);
         CarEntity carEntity = CarDetailBuilder.buildEntity(carRequestDto);
-        long id = carRepository.insert(carEntity);
+        Long id = carRepository.insert(carEntity);
         return CarDetailBuilder.buildResponseDto(id,carEntity);
     }
 

@@ -7,7 +7,7 @@ import com.fincity.cardetailapp.enums.CarSearchEnum;
 import java.util.List;
 
 public interface CarRepository {
-    long insert(CarEntity car);
+    Long insert(CarEntity car);
 
     CarEntity findById(Long id);
 
